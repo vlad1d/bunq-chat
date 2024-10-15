@@ -1,42 +1,59 @@
-# Slim Framework 4 Skeleton Application
+# Bunq Final Coding Assignment
+#### by Vlad Ichim
 
-[![Coverage Status](https://coveralls.io/repos/github/slimphp/Slim-Skeleton/badge.svg?branch=master)](https://coveralls.io/github/slimphp/Slim-Skeleton?branch=master)
+## Description
+This project is a simple chat application backend written in PHP. It allows users to create chat groups, join these groups, and send messages within them. The chat groups are public, 
+meaning any user can join any group, where they can chat for a while or list all the messages. The data is stored in a SQLite 
+database.
 
-Use this skeleton application to quickly setup and start working on a new Slim Framework 4 application. This application uses the latest Slim 4 with Slim PSR-7 implementation and PHP-DI container implementation. It also uses the Monolog logger.
-
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
-
-## Install the Application
-
-Run this command from the directory in which you want to install your new Slim Framework application. You will require PHP 7.4 or newer.
-
+## Running the Application
 ```bash
-composer create-project slim/slim-skeleton [my-app-name]
-```
-
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
-
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writable.
-
-To run the application in development, you can run these commands 
-
-```bash
-cd [my-app-name]
-composer start
-```
-
-Or you can use `docker-compose` to run the app with `docker`, so you can run these commands:
-```bash
-cd [my-app-name]
-docker-compose up -d
+cd bunq-chat
+composer run start
 ```
 After that, open `http://localhost:8080` in your browser.
 
 Run this command in the application directory to run the test suite
 
 ```bash
-composer test
+composer run test
 ```
 
-That's it! Now go build something cool.
+## Functionality
+
+### Requirements
+I used curl to make requests to the API. The following commands satisfy the requirements:
+- Creating chat groups:
+```
+curl -X POST 'http://localhost:8080/chats/{id}'
+```
+- Join chat groups:
+    
+```
+curl -X POST 'http://localhost:8080/chats/{chatId}/users/{userId}'
+```
+- List all messages in a chat group:
+
+```
+curl -X GET 'http://localhost:8080/messages/{chatId}/users/{userId}'
+```
+
+- Send messages to a chat group:
+
+``` 
+  curl -X POST 'curl -X POST http://localhost:8080/messages/{chatId}/users/{userId} \
+     -H "Content-Type: application/json" \
+     -d '{"content": "Hello, Bunq!"}'
+```
+
+### Additional Features
+All routes are defined in the `routes.php` file. Additional implemented routes are:
+- Users: Get a list of users, get a user by id, create a new user.
+- Chats: Get a list of chats, get a chat by id, delete a chat, leave a chat.
+
+### Further Improvements
+The application could be improved by adding more features such as:
+- User authentication
+- User roles
+- Message editing/deletion
+- etc.

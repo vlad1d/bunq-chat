@@ -13,12 +13,18 @@ class SQLiteMessageRepository implements MessageRepository
 {
     use RepositoryHandler;
 
+    /**
+     * @param PDO $connection
+     */
     public function __construct(PDO $connection)
     {
         $this->connection = $connection;
         $this->initialiseMessages();
     }
 
+    /**
+     * Initialise the messages table.
+     */
     private function initialiseMessages(): void
     {
         $this->connection->exec(
@@ -36,10 +42,12 @@ class SQLiteMessageRepository implements MessageRepository
      */
     public function sendMessage(int $chatId, int $userId, string $content): void
     {
+        // Error checking
         $this->checkChatExists($chatId);
         $this->checkUserExists($userId);
         $this->checkUserExistsChat($chatId, $userId);
 
+        // Insert message into the database
         $statement = $this->connection->prepare(
             'INSERT INTO messages (chat_id, user_id, content) VALUES (:chatId, :userId, :content)'
         );
@@ -51,10 +59,12 @@ class SQLiteMessageRepository implements MessageRepository
      */
     public function listMessages(int $chatId, int $userId): array
     {
+        // Error checking
         $this->checkChatExists($chatId);
         $this->checkUserExists($userId);
         $this->checkUserExistsChat($chatId, $userId);
 
+        // Return a list of all messages in the chat
         $statement = $this->connection->prepare(
             'SELECT * FROM messages WHERE chat_id = :chatId'
         );

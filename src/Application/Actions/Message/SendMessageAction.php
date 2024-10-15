@@ -20,7 +20,6 @@ class SendMessageAction extends MessageAction
         }
 
         $this->messageRepository->sendMessage($chatId, $userId, $content);
-
         return $this->respondWithData(['message' => 'Message sent successfully']);
     }
 }

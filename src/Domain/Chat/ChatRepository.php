@@ -6,7 +6,6 @@ namespace App\Domain\Chat;
 
 use App\Domain\Message\UserAlreadyExistsInChatException;
 use App\Domain\Message\UserNotInChatException;
-use App\Domain\User\UserAlreadyExistsException;
 use App\Domain\User\UserNotFoundException;
 
 interface ChatRepository

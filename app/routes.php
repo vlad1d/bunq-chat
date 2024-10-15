@@ -25,16 +25,23 @@ return function (App $app) {
     });
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
+        $response->getBody()->write('Hello, Bunq!');
         return $response;
     });
 
+    /**
+     * The routes correlated to the user functionality, such as getting a list of users, viewing and creating a user.
+     */
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
         $group->post('/{id}', CreateUserAction::class);
     });
 
+    /**
+     * The routes correlated to the chat groups functionality, such as getting a list of chat groups, viewing,
+     * creating and deleting a chat group. Users can join and leave chat groups.
+     */
     $app->group('/chats', function (Group $group) {
         $group->get('', ListChatsAction::class);
         $group->get('/{id}', ViewChatAction::class);
@@ -44,6 +51,10 @@ return function (App $app) {
         $group->delete('/{chatId}/users/{userId}', LeaveChatAction::class);
     });
 
+    /**
+     * The routes correlated to the messages functionality, getting a list of messages and sending a message.
+     * The userId is required because the user must be part of the chat group to view and send messages.
+     */
     $app->group('/messages', function (Group $group) {
         $group->get('/{chatId}/users/{userId}', ListMessagesAction::class);
         $group->post('/{chatId}/users/{userId}', SendMessageAction::class);

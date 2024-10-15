@@ -23,6 +23,9 @@ class SQLiteChatRepository implements ChatRepository
         $this->initialiseChats();
     }
 
+    /**
+     * Initialise the chats groups table and the chat members table.
+     */
     private function initialiseChats(): void
     {
         $this->connection->exec('CREATE TABLE IF NOT EXISTS chats (id INTEGER PRIMARY KEY)');
@@ -35,6 +38,7 @@ class SQLiteChatRepository implements ChatRepository
      */
     public function findAll(): array
     {
+        // Select all chats and return them as an array of Chat objects
         $statements = $this->connection->query('SELECT * FROM chats');
         $chats = [];
         while ($row = $statements->fetch(PDO::FETCH_ASSOC)) {
@@ -48,8 +52,10 @@ class SQLiteChatRepository implements ChatRepository
      */
     public function findChatOfId(int $id): Chat
     {
+        // Check if the chat exists
         $this->checkChatExists($id);
 
+        // Select the chat and its members
         $statements = $this->connection->prepare('SELECT * FROM chats WHERE id = :id');
         $statements->execute(['id' => $id]);
         $row = $statements->fetch(PDO::FETCH_ASSOC);
@@ -64,12 +70,14 @@ class SQLiteChatRepository implements ChatRepository
      */
     public function create(int $id): void
     {
+        // Check if the chat already exists
         $statements = $this->connection->prepare('SELECT * FROM chats WHERE id = (:id)');
         $statements->execute(['id' => $id]);
         if ($statements->fetch(PDO::FETCH_ASSOC)) {
             throw new ChatAlreadyExistsException();
         }
 
+        // Create the chat
         $statements = $this->connection->prepare('INSERT INTO chats (id) VALUES (:id)');
         $statements->execute(['id' => $id]);
     }
@@ -79,7 +87,7 @@ class SQLiteChatRepository implements ChatRepository
      */
     public function delete(int $id): void
     {
-        // Check if the chat exists
+        // Check if the chat exists, if it does not delete it
         $this->checkChatExists($id);
 
         $statements = $this->connection->prepare('DELETE FROM chats WHERE id = :id');

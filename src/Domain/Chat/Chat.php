@@ -8,15 +8,28 @@ use JsonSerializable;
 
 class Chat implements JsonSerializable
 {
+    /**
+     * @var int
+     */
     private int $id;
+    /**
+     * @var array $members
+     */
     private array $members;
 
+    /**
+     * @param int $id
+     * @param array $members
+     */
     public function __construct(int $id, array $members = [])
     {
         $this->id = $id;
         $this->members = $members;
     }
 
+    /**
+     * @return int
+     */
     public function getId(): int
     {
         return $this->id;

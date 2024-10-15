@@ -13,7 +13,6 @@ class ListMessagesAction extends MessageAction
         $chatId = (int) $this->resolveArg('chatId');
         $userId = (int) $this->resolveArg('userId');
         $messages = $this->messageRepository->listMessages($chatId, $userId);
-
         return $this->respondWithData($messages);
     }
 }
