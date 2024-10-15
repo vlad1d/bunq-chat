@@ -8,5 +8,5 @@ use App\Domain\DomainException\DomainRecordNotFoundException;
 
 class ChatAlreadyExistsException extends DomainRecordNotFoundException
 {
-    public $message = 'The chat you requested already exists.';
+    public $message = 'The chat you requested to create already exists.';
 }
