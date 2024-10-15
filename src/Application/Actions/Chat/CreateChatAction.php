@@ -14,8 +14,8 @@ class CreateChatAction extends ChatAction
     protected function action(): Response
     {
         $chatId = (int) $this->resolveArg('id');
-        $chat = $this->chatRepository->create($chatId);
+        $this->chatRepository->create($chatId);
         $this->logger->info("Chat of id `{$chatId}` was created.");
-        return $this->respondWithData($chat);
+        return $this->respondWithData(['message' => 'Chat created successfully.']);
     }
 }

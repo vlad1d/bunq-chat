@@ -23,10 +23,4 @@ interface UserRepository
      * @throws UserAlreadyExistsException
      */
     public function create(int $id): void;
-
-    /**
-     * @param int $id
-     * @throws UserNotFoundException
-     */
-    public function delete(int $id): void;
 }

@@ -14,7 +14,7 @@ class DeleteChatAction extends ChatAction
     protected function action(): Response
     {
         $chatId = (int) $this->resolveArg('id');
-        $chat = $this->chatRepository->delete($chatId);
+        $this->chatRepository->delete($chatId);
         $this->logger->info("Chat of id `{$chatId}` was deleted.");
         return $this->respondWithData(['message' => 'Chat deleted successfully']);
     }

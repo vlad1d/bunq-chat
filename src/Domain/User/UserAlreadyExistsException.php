@@ -8,5 +8,5 @@ use App\Domain\DomainException\DomainRecordNotFoundException;
 
 class UserAlreadyExistsException extends DomainRecordNotFoundException
 {
-    public $message = 'The user you requested to create already exists.';
+    public $message = 'The user you requested is already in the scope.';
 }

@@ -9,10 +9,12 @@ use JsonSerializable;
 class Chat implements JsonSerializable
 {
     private int $id;
+    private array $members;
 
-    public function __construct(int $id)
+    public function __construct(int $id, array $members = [])
     {
         $this->id = $id;
+        $this->members = $members;
     }
 
     public function getId(): int
@@ -24,7 +26,8 @@ class Chat implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->id
+            'id' => $this->id,
+            'members' => array_values($this->members),
         ];
     }
 }

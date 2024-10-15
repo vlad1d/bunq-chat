@@ -15,8 +15,8 @@ class CreateUserAction extends UserAction
     protected function action(): Response
     {
         $userId = (int) $this->resolveArg('id');
-        $user = $this->userRepository->create($userId);
+        $this->userRepository->create($userId);
         $this->logger->info("User of id `{$userId}` was created.");
-        return $this->respondWithData($user);
+        return $this->respondWithData(['message' => 'User created successfully.']);
     }
 }

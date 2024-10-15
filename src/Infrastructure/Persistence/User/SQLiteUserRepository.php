@@ -84,19 +84,4 @@ class SQLiteUserRepository implements UserRepository
         $statements = $this->connection->prepare('INSERT INTO users (id) VALUES (:id)');
         $statements->execute(['id' => $id]);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(int $id): void
-    {
-        $statements = $this->connection->prepare('SELECT * FROM users WHERE id = :id');
-        $statements->execute(['id' => $id]);
-        if (!$statements->fetch(PDO::FETCH_ASSOC)) {
-            throw new UserNotFoundException();
-        }
-
-        $statements = $this->connection->prepare('DELETE FROM users WHERE id = :id');
-        $statements->execute(['id' => $id]);
-    }
 }
