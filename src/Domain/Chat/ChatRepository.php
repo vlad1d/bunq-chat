@@ -24,4 +24,11 @@ interface ChatRepository
      * @throws ChatAlreadyExistsException
      */
     public function create(int $id): Chat;
+
+    /**
+     * @param int $id
+     * @return Chat
+     * @throws ChatNotFoundException
+     */
+    public function delete(int $id): Chat;
 }
