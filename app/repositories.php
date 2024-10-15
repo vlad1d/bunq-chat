@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use App\Domain\User\UserRepository;
 use App\Domain\Chat\ChatRepository;
+use App\Domain\Message\MessageRepository;
 use App\Infrastructure\Persistence\User\SQLiteUserRepository;
 use App\Infrastructure\Persistence\Chat\SQLiteChatRepository;
+use App\Infrastructure\Persistence\Message\SQLiteMessageRepository;
 use DI\ContainerBuilder;
 
 return function (ContainerBuilder $containerBuilder) {
@@ -22,5 +24,9 @@ return function (ContainerBuilder $containerBuilder) {
         ChatRepository::class => function () use ($pdo) {
             return new SQLiteChatRepository($pdo);
         },
+
+       MessageRepository::class => function () use ($pdo) {
+            return new SQLiteMessageRepository($pdo);
+       }
     ]);
 };

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Chat;
 
+use App\Domain\Message\UserAlreadyExistsInChatException;
+use App\Domain\Message\UserNotInChatException;
 use App\Domain\User\UserAlreadyExistsException;
 use App\Domain\User\UserNotFoundException;
 
@@ -38,9 +40,8 @@ interface ChatRepository
      * @param int $chatId
      * @param int $userId
      * @throws ChatNotFoundException
-     * @throws UserAlreadyExistsException
-     * @throws ChatAlreadyExistsException
      * @throws UserNotFoundException
+     * @throws UserAlreadyExistsInChatException
      */
     public function joinMember(int $chatId, int $userId): void;
 
@@ -48,8 +49,8 @@ interface ChatRepository
      * @param int $chatId
      * @param int $userId
      * @throws ChatNotFoundException
-     * @throws UserAlreadyExistsException
      * @throws UserNotFoundException
+     * @throws UserNotInChatException
      */
     public function leaveMember(int $chatId, int $userId): void;
 }

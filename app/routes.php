@@ -9,7 +9,8 @@ use App\Application\Actions\Chat\ViewChatAction;
 use App\Application\Actions\Chat\CreateChatAction;
 use App\Application\Actions\Chat\DeleteChatAction;
 use App\Application\Actions\User\CreateUserAction;
-use App\Application\Actions\User\DeleteUserAction;
+use App\Application\Actions\Message\ListMessagesAction;
+use App\Application\Actions\Message\SendMessageAction;
 use App\Application\Actions\Chat\JoinChatAction;
 use App\Application\Actions\Chat\LeaveChatAction;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -41,5 +42,10 @@ return function (App $app) {
         $group->delete('/{id}', DeleteChatAction::class);
         $group->post('/{chatId}/users/{userId}', JoinChatAction::class);
         $group->delete('/{chatId}/users/{userId}', LeaveChatAction::class);
+    });
+
+    $app->group('/messages', function (Group $group) {
+        $group->get('/{chatId}/users/{userId}', ListMessagesAction::class);
+        $group->post('/{chatId}/users/{userId}', SendMessageAction::class);
     });
 };

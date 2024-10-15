@@ -8,18 +8,15 @@ use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserAlreadyExistsException;
 use App\Domain\User\UserRepository;
+use App\Infrastructure\Persistence\RepositoryHandler;
 use PDO;
 
 class SQLiteUserRepository implements UserRepository
 {
-    /**
-     * @var PDO
-     */
-    private PDO $connection;
+    use RepositoryHandler;
 
     /**
      * @param PDO $connection
-     * @throws UserAlreadyExistsException
      */
     public function __construct(PDO $connection)
     {
@@ -27,19 +24,9 @@ class SQLiteUserRepository implements UserRepository
         $this->initialiseUsers();
     }
 
-    /**
-     * @throws UserAlreadyExistsException
-     */
     private function initialiseUsers(): void
     {
         $this->connection->exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY)');
-        $statements = $this->connection->query('SELECT COUNT(*) FROM users');
-        $cnt = $statements->fetchColumn();
-
-        if ($cnt == 0) {
-            $this->create(1);
-            $this->create(2);
-        }
     }
 
     /**
@@ -60,12 +47,10 @@ class SQLiteUserRepository implements UserRepository
      */
     public function findUserOfId(int $id): User
     {
+        $this->checkUserExists($id);
         $statements = $this->connection->prepare('SELECT * FROM users WHERE id = :id');
         $statements->execute(['id' => $id]);
         $row = $statements->fetch(PDO::FETCH_ASSOC);
-        if (!$row) {
-            throw new UserNotFoundException();
-        }
         return new User($row['id']);
     }
 
