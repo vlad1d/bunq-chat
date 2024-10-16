@@ -60,9 +60,11 @@ class DeleteChatActionTest extends TestCase
         $response = $app->handle($request);
 
         $payload = (string)$response->getBody();
+
         $expectedError = new ActionError(ActionError::RESOURCE_NOT_FOUND, 'The chat you requested does not exist.');
         $expectedPayload = new ActionPayload(404, null, $expectedError);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
+
         $this->assertEquals($serializedPayload, $payload);
     }
 }
