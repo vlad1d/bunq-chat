@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Application\Actions\User;
+namespace Tests\Application\Actions\Chat;
 
 use App\Application\Actions\ActionError;
 use App\Application\Actions\ActionPayload;
 use App\Application\Handlers\HttpErrorHandler;
-use App\Domain\User\User;
-use App\Domain\User\UserNotFoundException;
-use App\Domain\User\UserRepository;
+use App\Domain\Chat\Chat;
+use App\Domain\Chat\ChatNotFoundException;
+use App\Domain\Chat\ChatRepository;
 use DI\Container;
 use Slim\Middleware\ErrorMiddleware;
 use Tests\TestCase;
 
-class ViewUserActionTest extends TestCase
+class ViewChatActionTest extends TestCase
 {
     public function testAction()
     {
@@ -23,27 +23,27 @@ class ViewUserActionTest extends TestCase
         /** @var Container $container */
         $container = $app->getContainer();
 
-        $user = new User(1);
+        $chat = new Chat(1);
 
-        $userRepositoryProphecy = $this->prophesize(UserRepository::class);
-        $userRepositoryProphecy
-            ->findUserOfId(1)
-            ->willReturn($user)
+        $chatRepositoryProphecy = $this->prophesize(ChatRepository::class);
+        $chatRepositoryProphecy
+            ->findChatOfId(1)
+            ->willReturn($chat)
             ->shouldBeCalledOnce();
 
-        $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
+        $container->set(ChatRepository::class, $chatRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('GET', '/chats/1');
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(200, $user);
+        $expectedPayload = new ActionPayload(200, $chat);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 
         $this->assertEquals($serializedPayload, $payload);
     }
 
-    public function testActionThrowsUserNotFoundException()
+    public function testActionThrowsChatNotFoundException()
     {
         $app = $this->getAppInstance();
 
@@ -59,19 +59,19 @@ class ViewUserActionTest extends TestCase
         /** @var Container $container */
         $container = $app->getContainer();
 
-        $userRepositoryProphecy = $this->prophesize(UserRepository::class);
-        $userRepositoryProphecy
-            ->findUserOfId(1)
-            ->willThrow(new UserNotFoundException())
+        $chatRepositoryProphecy = $this->prophesize(ChatRepository::class);
+        $chatRepositoryProphecy
+            ->findChatOfId(1)
+            ->willThrow(new ChatNotFoundException())
             ->shouldBeCalledOnce();
 
-        $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
+        $container->set(ChatRepository::class, $chatRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('GET', '/chats/1');
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
-        $expectedError = new ActionError(ActionError::RESOURCE_NOT_FOUND, 'The user you requested does not exist.');
+        $expectedError = new ActionError(ActionError::RESOURCE_NOT_FOUND, 'The chat you requested does not exist.');
         $expectedPayload = new ActionPayload(404, null, $expectedError);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 

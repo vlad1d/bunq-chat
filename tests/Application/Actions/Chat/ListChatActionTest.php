@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Application\Actions\User;
+namespace Tests\Application\Actions\Chat;
 
 use App\Application\Actions\ActionPayload;
-use App\Domain\User\UserRepository;
-use App\Domain\User\User;
+use App\Domain\Chat\ChatRepository;
+use App\Domain\Chat\Chat;
 use DI\Container;
 use Tests\TestCase;
 
-class ListUserActionTest extends TestCase
+class ListChatActionTest extends TestCase
 {
     public function testAction()
     {
@@ -19,21 +19,21 @@ class ListUserActionTest extends TestCase
         /** @var Container $container */
         $container = $app->getContainer();
 
-        $user = new User(1);
+        $chat = new Chat(1);
 
-        $userRepositoryProphecy = $this->prophesize(UserRepository::class);
-        $userRepositoryProphecy
+        $chatRepositoryProphecy = $this->prophesize(ChatRepository::class);
+        $chatRepositoryProphecy
             ->findAll()
-            ->willReturn([$user])
+            ->willReturn([$chat])
             ->shouldBeCalledOnce();
 
-        $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
+        $container->set(ChatRepository::class, $chatRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users');
+        $request = $this->createRequest('GET', '/chats');
         $response = $app->handle($request);
 
         $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(200, [$user]);
+        $expectedPayload = new ActionPayload(200, [$chat]);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
 
         $this->assertEquals($serializedPayload, $payload);

@@ -13,11 +13,12 @@ class SendMessageAction extends MessageAction
         $data = $this->request->getParsedBody();
         $chatId = (int) $this->resolveArg('chatId');
         $userId = (int) $this->resolveArg('userId');
-        $content = (string) $data['content'];
 
-        if (empty($content)) {
+        if (empty($data['content'])) {
             return $this->respondWithData(['message' => 'Content is required'], 400);
         }
+
+        $content = (string) $data['content'];
 
         $this->messageRepository->sendMessage($chatId, $userId, $content);
         return $this->respondWithData(['message' => 'Message sent successfully']);

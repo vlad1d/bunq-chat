@@ -7,14 +7,13 @@ namespace Tests\Application\Actions\User;
 use App\Application\Actions\ActionError;
 use App\Application\Actions\ActionPayload;
 use App\Application\Handlers\HttpErrorHandler;
-use App\Domain\User\User;
-use App\Domain\User\UserNotFoundException;
+use App\Domain\User\UserAlreadyExistsException;
 use App\Domain\User\UserRepository;
 use DI\Container;
 use Slim\Middleware\ErrorMiddleware;
 use Tests\TestCase;
 
-class ViewUserActionTest extends TestCase
+class CreateUserActionTest extends TestCase
 {
     public function testAction()
     {
@@ -22,34 +21,26 @@ class ViewUserActionTest extends TestCase
 
         /** @var Container $container */
         $container = $app->getContainer();
-
-        $user = new User(1);
-
         $userRepositoryProphecy = $this->prophesize(UserRepository::class);
         $userRepositoryProphecy
-            ->findUserOfId(1)
-            ->willReturn($user)
+            ->create(1)
             ->shouldBeCalledOnce();
-
         $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
 
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('POST', '/users/1');
         $response = $app->handle($request);
-
-        $payload = (string) $response->getBody();
-        $expectedPayload = new ActionPayload(200, $user);
+        $payload = (string)$response->getBody();
+        $expectedPayload = new ActionPayload(200, ['message' => 'User created successfully.']);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
-
         $this->assertEquals($serializedPayload, $payload);
     }
 
-    public function testActionThrowsUserNotFoundException()
+    public function testActionThrowsUserAlreadyExistsException()
     {
         $app = $this->getAppInstance();
 
         $callableResolver = $app->getCallableResolver();
         $responseFactory = $app->getResponseFactory();
-
         $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
         $errorMiddleware = new ErrorMiddleware($callableResolver, $responseFactory, true, false, false);
         $errorMiddleware->setDefaultErrorHandler($errorHandler);
@@ -58,23 +49,22 @@ class ViewUserActionTest extends TestCase
 
         /** @var Container $container */
         $container = $app->getContainer();
-
         $userRepositoryProphecy = $this->prophesize(UserRepository::class);
         $userRepositoryProphecy
-            ->findUserOfId(1)
-            ->willThrow(new UserNotFoundException())
+            ->create(1)
+            ->willThrow(new UserAlreadyExistsException())
             ->shouldBeCalledOnce();
-
         $container->set(UserRepository::class, $userRepositoryProphecy->reveal());
-
-        $request = $this->createRequest('GET', '/users/1');
+        $request = $this->createRequest('POST', '/users/1');
         $response = $app->handle($request);
 
-        $payload = (string) $response->getBody();
-        $expectedError = new ActionError(ActionError::RESOURCE_NOT_FOUND, 'The user you requested does not exist.');
+        $payload = (string)$response->getBody();
+        $expectedError = new ActionError(
+            ActionError::RESOURCE_NOT_FOUND,
+            'The user you requested is already in the scope.'
+        );
         $expectedPayload = new ActionPayload(404, null, $expectedError);
         $serializedPayload = json_encode($expectedPayload, JSON_PRETTY_PRINT);
-
         $this->assertEquals($serializedPayload, $payload);
     }
 }

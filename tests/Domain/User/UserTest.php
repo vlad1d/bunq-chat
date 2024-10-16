@@ -12,47 +12,34 @@ class UserTest extends TestCase
     public function userProvider(): array
     {
         return [
-            [1, 'bill.gates', 'Bill', 'Gates'],
-            [2, 'steve.jobs', 'Steve', 'Jobs'],
-            [3, 'mark.zuckerberg', 'Mark', 'Zuckerberg'],
-            [4, 'evan.spiegel', 'Evan', 'Spiegel'],
-            [5, 'jack.dorsey', 'Jack', 'Dorsey'],
+            [1],
+            [2],
+            [3],
+            [4],
+            [5],
         ];
     }
 
     /**
      * @dataProvider userProvider
-     * @param int    $id
-     * @param string $username
-     * @param string $firstName
-     * @param string $lastName
+     * @param int $id
      */
-    public function testGetters(int $id, string $username, string $firstName, string $lastName)
+    public function testGetters(int $id)
     {
-        $user = new User($id, $username, $firstName, $lastName);
-
+        $user = new User($id);
         $this->assertEquals($id, $user->getId());
-        $this->assertEquals($username, $user->getUsername());
-        $this->assertEquals($firstName, $user->getFirstName());
-        $this->assertEquals($lastName, $user->getLastName());
     }
 
     /**
      * @dataProvider userProvider
      * @param int    $id
-     * @param string $username
-     * @param string $firstName
-     * @param string $lastName
      */
-    public function testJsonSerialize(int $id, string $username, string $firstName, string $lastName)
+    public function testJsonSerialize(int $id)
     {
-        $user = new User($id, $username, $firstName, $lastName);
+        $user = new User($id);
 
         $expectedPayload = json_encode([
-            'id' => $id,
-            'username' => $username,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
+            'id' => $id
         ]);
 
         $this->assertEquals($expectedPayload, json_encode($user));

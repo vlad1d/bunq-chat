@@ -51,6 +51,14 @@ class Message implements JsonSerializable
     /**
      * @return int
      */
+    public function getChatId(): int
+    {
+        return $this->chatId;
+    }
+
+    /**
+     * @return int
+     */
     public function getUserId(): int
     {
         return $this->userId;

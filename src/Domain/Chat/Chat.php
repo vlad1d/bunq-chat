@@ -35,6 +35,14 @@ class Chat implements JsonSerializable
         return $this->id;
     }
 
+    /**
+     * @return array
+     */
+    public function getMembers(): array
+    {
+        return $this->members;
+    }
+
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
     {
