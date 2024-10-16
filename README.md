@@ -1,14 +1,12 @@
 # Bunq Final Coding Assignment
-#### by Vlad Ichim
 
 ## Description
-This project is a simple chat application backend written in PHP. It allows users to create chat groups, join these groups, and send messages within them. The chat groups are public, 
-meaning any user can join any group, where they can chat for a while or list all the messages. The data is stored in a SQLite 
-database.
+This project is a simple chat application backend written in PHP. It allows users to create chat groups, join these groups, and send messages within them. Additionally, it also implements a few extra basic commands to ensure the functionality of the application. The data is stored in a SQLite database.
 
 ## Running the Application
 ```bash
 cd bunq-chat
+composer install # to install the dependencies
 composer run start
 ```
 After that, open `http://localhost:8080` in your browser.
@@ -32,7 +30,7 @@ curl -X POST 'http://localhost:8080/chats/{id}'
 ```
 curl -X POST 'http://localhost:8080/chats/{chatId}/users/{userId}'
 ```
-- List all messages in a chat group:
+- List all messages in a chat group (important: the userId here is only for verification - to check whether they are in the group; this command lists all messages in a chat group):
 
 ```
 curl -X GET 'http://localhost:8080/messages/{chatId}/users/{userId}'
@@ -41,7 +39,7 @@ curl -X GET 'http://localhost:8080/messages/{chatId}/users/{userId}'
 - Send messages to a chat group:
 
 ``` 
-  curl -X POST 'curl -X POST http://localhost:8080/messages/{chatId}/users/{userId} \
+  curl -X POST http://localhost:8080/messages/{chatId}/users/{userId} \
      -H "Content-Type: application/json" \
      -d '{"content": "Hello, Bunq!"}'
 ```
@@ -57,3 +55,6 @@ The application could be improved by adding more features such as:
 - User roles
 - Message editing/deletion
 - etc.
+
+## Contact
+    Vlad Ichim | 0681097927 | vladichim17@yahoo.ro
