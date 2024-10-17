@@ -57,4 +57,4 @@ The application could be improved by adding more features such as:
 - etc.
 
 ## Contact
-    Vlad Ichim | 0681097927 | vladichim17@yahoo.ro
+    Vlad Ichim | 0681097927 | ichimvlad17@gmail.com
